@@ -3,7 +3,6 @@
 #include "console.h"
 #include "hook.h"
 #include "mem.h"
-#include "gdiDrawing.h"
 #include "constants.h"
 #include "esp.h"
 #include "math.h"

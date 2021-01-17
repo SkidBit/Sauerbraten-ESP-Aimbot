@@ -21,9 +21,6 @@
     <Filter Include="esp">
       <UniqueIdentifier>{3ab2f9b7-b321-46d0-b8f5-d14e8ca03849}</UniqueIdentifier>
     </Filter>
-    <Filter Include="gdi">
-      <UniqueIdentifier>{c7f40dd3-154f-4bc9-bdf6-fa96a6264bf6}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mem.h">
@@ -50,9 +47,6 @@
     <ClInclude Include="hook.h">
       <Filter>hooks</Filter>
     </ClInclude>
-    <ClInclude Include="gdiDrawing.h">
-      <Filter>gdi</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -66,9 +60,6 @@
     </ClCompile>
     <ClCompile Include="hook.cpp">
       <Filter>hooks</Filter>
-    </ClCompile>
-    <ClCompile Include="gdiDrawing.cpp">
-      <Filter>gdi</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

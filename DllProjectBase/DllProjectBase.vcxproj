@@ -156,7 +156,6 @@
     <ClInclude Include="constants.h" />
     <ClInclude Include="esp.h" />
     <ClInclude Include="exampleHook.h" />
-    <ClInclude Include="gdiDrawing.h" />
     <ClInclude Include="hook.h" />
     <ClInclude Include="includes.h" />
     <ClInclude Include="mem.h" />
@@ -165,7 +164,6 @@
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="esp.cpp" />
-    <ClCompile Include="gdiDrawing.cpp" />
     <ClCompile Include="hook.cpp" />
     <ClCompile Include="mem.cpp" />
   </ItemGroup>
