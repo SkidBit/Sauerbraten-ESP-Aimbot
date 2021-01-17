@@ -3,7 +3,8 @@
 
 #define PI 3.14159265358979323846
 
-bool WorldToScreen(Vector3 pos, Vector2& screen, float matrix[16], int windowWidth, int windowHeight) {
+bool WorldToScreen(Vector3 pos, Vector2& screen, float matrix[16], int windowWidth, int windowHeight)
+{
 	//Matrix-vector Product, multiplying world(eye) coordinates by projection matrix = clipCoords
 	Vector4 clipCoords;
 	clipCoords.x = pos.x * matrix[0] + pos.y * matrix[4] + pos.z * matrix[8] + matrix[12];
@@ -25,11 +26,13 @@ bool WorldToScreen(Vector3 pos, Vector2& screen, float matrix[16], int windowWid
 	return true;
 }
 
-float getDistanceBetweenEntities(Entity* firstEntity, Entity* secondEntity) {
+float getDistanceBetweenEntities(Entity* firstEntity, Entity* secondEntity)
+{
 	return sqrt(pow(firstEntity->getPosition().x - secondEntity->getPosition().x, 2) + pow(firstEntity->getPosition().y - secondEntity->getPosition().y, 2));
 }
 
-Entity* getClosestEnemy(Entity* player, EntityList* entList, bool teamGame, int playerCount) {
+Entity* getClosestEnemy(Entity* player, EntityList* entList, bool teamGame, int playerCount)
+{
 	float closestEntityDist = INFINITY;
 	Entity* closestEntity = nullptr;
 	float tmpDistance = 0;
@@ -69,11 +72,8 @@ float calculateDifferenceBetweenAngles(float firstAngle, float secondAngle)
 	return difference;
 }
 
-Entity* getClosestEnemyToCrosshair(Entity* player, EntityList* entList, bool teamGame, int playerCount) {
-
-	// angle y from -90 to 90
-	// angle x from 160 to 0, rotates around
-
+Entity* getClosestEnemyToCrosshair(Entity* player, EntityList* entList, bool teamGame, int playerCount)
+{
 	Entity* closestEntity = nullptr;
 
 	float tmpAngleDiff = 0;
@@ -124,7 +124,8 @@ Entity* getClosestEnemyToCrosshair(Entity* player, EntityList* entList, bool tea
 }
 
 
-bool isTeamGame(uintptr_t baseAddressMainMod) {
+bool isTeamGame(uintptr_t baseAddressMainMod)
+{
 	BYTE gameMode = *(BYTE*)(baseAddressMainMod + gameModePointer);
 	return std::find(teamModes.begin(), teamModes.end(), gameMode) != teamModes.end();
 }
