@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Ressourcendateien">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="mem">
+      <UniqueIdentifier>{486054c5-1c14-4248-99b7-cc6994a8b73e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="hooks">
+      <UniqueIdentifier>{f713a6fb-6ba8-43a3-9070-8b4df5a1a34a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="headers">
+      <UniqueIdentifier>{6bf79f34-2fe7-4c90-b934-674630d33676}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="esp">
+      <UniqueIdentifier>{3ab2f9b7-b321-46d0-b8f5-d14e8ca03849}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gdi">
+      <UniqueIdentifier>{c7f40dd3-154f-4bc9-bdf6-fa96a6264bf6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="mem.h">
+      <Filter>mem</Filter>
+    </ClInclude>
+    <ClInclude Include="console.h">
+      <Filter>source files</Filter>
+    </ClInclude>
+    <ClInclude Include="ntdll.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="exampleHook.h">
+      <Filter>hooks</Filter>
+    </ClInclude>
+    <ClInclude Include="includes.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="constants.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="esp.h">
+      <Filter>esp</Filter>
+    </ClInclude>
+    <ClInclude Include="hook.h">
+      <Filter>hooks</Filter>
+    </ClInclude>
+    <ClInclude Include="MinHook\include\MinHook.h">
+      <Filter>hooks</Filter>
+    </ClInclude>
+    <ClInclude Include="gdiDrawing.h">
+      <Filter>gdi</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>source files</Filter>
+    </ClCompile>
+    <ClCompile Include="mem.cpp">
+      <Filter>mem</Filter>
+    </ClCompile>
+    <ClCompile Include="esp.cpp">
+      <Filter>esp</Filter>
+    </ClCompile>
+    <ClCompile Include="hook.cpp">
+      <Filter>hooks</Filter>
+    </ClCompile>
+    <ClCompile Include="gdiDrawing.cpp">
+      <Filter>gdi</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
