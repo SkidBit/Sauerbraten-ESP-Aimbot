@@ -160,7 +160,6 @@
     <ClInclude Include="hook.h" />
     <ClInclude Include="includes.h" />
     <ClInclude Include="mem.h" />
-    <ClInclude Include="MinHook\include\MinHook.h" />
     <ClInclude Include="ntdll.h" />
   </ItemGroup>
   <ItemGroup>

@@ -50,9 +50,6 @@
     <ClInclude Include="hook.h">
       <Filter>hooks</Filter>
     </ClInclude>
-    <ClInclude Include="MinHook\include\MinHook.h">
-      <Filter>hooks</Filter>
-    </ClInclude>
     <ClInclude Include="gdiDrawing.h">
       <Filter>gdi</Filter>
     </ClInclude>
