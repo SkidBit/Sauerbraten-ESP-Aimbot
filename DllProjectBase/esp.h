@@ -9,3 +9,7 @@ Entity* getClosestEnemy(Entity* player, EntityList* entList, bool teamgame, int 
 bool isTeamGame(uintptr_t baseAddressMainMod);
 Entity* getClosestEnemyToCrosshair(Entity* player, EntityList* entList, bool teamGame, int playerCount);
 float calculateDifferenceBetweenAngles(float firstAngle, float secondAngle);
+void shootIfEnemyCloseToCrosshair(Entity* player, EntityList* entList, bool teamGame, int playerCount);
+void clickMouseLeft();
+bool isEntityValid(Entity* entity);
+float getClosestEnemyToCrosshairFOVDistance(Entity* player, EntityList* entList, bool teamGame, int playerCount);

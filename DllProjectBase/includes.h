@@ -9,3 +9,11 @@
 #include <vector>
 #include <algorithm>
 #include "string.h"
+#include <gl/GL.h>
+#include <gl/GLU.h>
+#include <dwmapi.h>
+#include <TlHelp32.h>
+#pragma comment( lib, "OpenGL32.lib" )
+#pragma comment (lib, "glu32.lib")
+#pragma comment(lib, "Dwmapi.lib")
+#include "math.h"

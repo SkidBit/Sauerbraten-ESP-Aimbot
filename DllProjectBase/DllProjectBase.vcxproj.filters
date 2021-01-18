@@ -21,6 +21,9 @@
     <Filter Include="esp">
       <UniqueIdentifier>{3ab2f9b7-b321-46d0-b8f5-d14e8ca03849}</UniqueIdentifier>
     </Filter>
+    <Filter Include="glDrawing">
+      <UniqueIdentifier>{cb5731e3-2e2d-42ab-bd7c-1fe0c88a1a56}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mem.h">
@@ -47,6 +50,9 @@
     <ClInclude Include="hook.h">
       <Filter>hooks</Filter>
     </ClInclude>
+    <ClInclude Include="glDrawing.h">
+      <Filter>glDrawing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -60,6 +66,9 @@
     </ClCompile>
     <ClCompile Include="hook.cpp">
       <Filter>hooks</Filter>
+    </ClCompile>
+    <ClCompile Include="glDrawing.cpp">
+      <Filter>glDrawing</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

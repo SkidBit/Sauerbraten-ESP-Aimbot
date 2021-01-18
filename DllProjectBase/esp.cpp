@@ -72,6 +72,10 @@ float calculateDifferenceBetweenAngles(float firstAngle, float secondAngle)
 	return difference;
 }
 
+bool isEntityValid(Entity* entity) {
+	return entity->getLife() > 0 && entity->getLife() < 1000;
+}
+
 Entity* getClosestEnemyToCrosshair(Entity* player, EntityList* entList, bool teamGame, int playerCount)
 {
 	Entity* closestEntity = nullptr;
@@ -86,7 +90,7 @@ Entity* getClosestEnemyToCrosshair(Entity* player, EntityList* entList, bool tea
 		if (entList->entities[i] != nullptr &&
 			entList->entities[i]->getLife() > 0) {
 
-			if (entList->entities[i]->getLife() > 0 && entList->entities[i]->getLife() < 1000) {
+			if (isEntityValid(entList->entities[i])) {
 
 				Vector3 src = player->getPosition();
 				Vector3 dst = entList->entities[i]->getPosition();
@@ -100,6 +104,7 @@ Entity* getClosestEnemyToCrosshair(Entity* player, EntityList* entList, bool tea
 				currentXAngle = player->getviewAngleX();
 				currentYAngle = player->getviewAngleY();
 
+				// calculate absolute angle diff
 				tmpAngleDiff = std::abs(calculateDifferenceBetweenAngles(currentXAngle, angle.x));
 				tmpAngleDiff += std::abs(currentYAngle - angle.y);
 
@@ -121,6 +126,131 @@ Entity* getClosestEnemyToCrosshair(Entity* player, EntityList* entList, bool tea
 		}
 	}
 	return closestEntity;
+}
+
+void clickMouseLeft() {
+
+	INPUT    Input = { 0 };
+	// left down 
+	Input.type = INPUT_MOUSE;
+	Input.mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
+	SendInput(1, &Input, sizeof(INPUT));
+	Sleep(25);
+	// left up
+	ZeroMemory(&Input, sizeof(INPUT));
+	Input.type = INPUT_MOUSE;
+	Input.mi.dwFlags = MOUSEEVENTF_LEFTUP;
+	SendInput(1, &Input, sizeof(INPUT));
+}
+
+void shootIfEnemyCloseToCrosshair(Entity* player, EntityList* entList, bool teamGame, int playerCount)
+{
+	Entity* closestEntity = nullptr;
+
+	float tmpAngleDiff = 0;
+	float closestEntityAngleDiff = INFINITY;
+
+	float currentXAngle = 0;
+	float currentYAngle = 0;
+
+	for (int i = 1; i < playerCount + 1; i++) {
+		if (entList->entities[i] != nullptr &&
+			entList->entities[i]->getLife() > 0) {
+
+			if (isEntityValid(entList->entities[i])) {
+
+				Vector3 src = player->getPosition();
+				Vector3 dst = entList->entities[i]->getPosition();
+
+				// calculate angles for target
+				Vector2 angle;
+				angle.x = (atan2f(dst.x - src.x, dst.y - src.y) * -1.0) / PI * 180.0;
+				angle.y = asinf((dst.z - src.z) / src.Distance(dst)) * (180.0 / PI);
+
+				// read current angles
+				currentXAngle = player->getviewAngleX();
+				currentYAngle = player->getviewAngleY();
+
+				// calculate absolute angle diff
+				tmpAngleDiff = std::abs(calculateDifferenceBetweenAngles(currentXAngle, angle.x));
+				tmpAngleDiff += std::abs(currentYAngle - angle.y);
+
+				if (teamGame) {
+					if (strcmp(player->getTeam(), entList->entities[i]->getTeam()) != 0) {
+						if (tmpAngleDiff < closestEntityAngleDiff) {
+							closestEntityAngleDiff = tmpAngleDiff;
+							closestEntity = entList->entities[i];
+						}
+					}
+				}
+				else {
+					if (tmpAngleDiff < closestEntityAngleDiff) {
+						closestEntityAngleDiff = tmpAngleDiff;
+						closestEntity = entList->entities[i];
+					}
+				}
+			}
+		}
+	}
+
+	// make variable depending on distance
+	if (closestEntityAngleDiff < 2.f) {
+		Sleep(10);
+		clickMouseLeft();
+	}
+}
+
+float getClosestEnemyToCrosshairFOVDistance(Entity* player, EntityList* entList, bool teamGame, int playerCount)
+{
+	Entity* closestEntity = nullptr;
+
+	float tmpAngleDiff = 0;
+	float closestEntityAngleDiff = INFINITY;
+
+	float currentXAngle = 0;
+	float currentYAngle = 0;
+
+	for (int i = 1; i < playerCount + 1; i++) {
+		if (entList->entities[i] != nullptr &&
+			entList->entities[i]->getLife() > 0) {
+
+			if (isEntityValid(entList->entities[i])) {
+
+				Vector3 src = player->getPosition();
+				Vector3 dst = entList->entities[i]->getPosition();
+
+				// calculate angles for target
+				Vector2 angle;
+				angle.x = (atan2f(dst.x - src.x, dst.y - src.y) * -1.0) / PI * 180.0;
+				angle.y = asinf((dst.z - src.z) / src.Distance(dst)) * (180.0 / PI);
+
+				// read current angles
+				currentXAngle = player->getviewAngleX();
+				currentYAngle = player->getviewAngleY();
+
+				// calculate absolute angle diff
+				tmpAngleDiff = std::abs(calculateDifferenceBetweenAngles(currentXAngle, angle.x));
+				tmpAngleDiff += std::abs(currentYAngle - angle.y);
+
+				if (teamGame) {
+					if (strcmp(player->getTeam(), entList->entities[i]->getTeam()) != 0) {
+						if (tmpAngleDiff < closestEntityAngleDiff) {
+							closestEntityAngleDiff = tmpAngleDiff;
+							closestEntity = entList->entities[i];
+						}
+					}
+				}
+				else {
+					if (tmpAngleDiff < closestEntityAngleDiff) {
+						closestEntityAngleDiff = tmpAngleDiff;
+						closestEntity = entList->entities[i];
+					}
+				}
+			}
+		}
+	}
+
+	return closestEntityAngleDiff;
 }
 
 

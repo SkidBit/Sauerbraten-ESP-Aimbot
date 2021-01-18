@@ -5,16 +5,7 @@
 #include "mem.h"
 #include "constants.h"
 #include "esp.h"
-#include "math.h"
-#include <algorithm>
-#include <gl/GL.h>
-#include <gl/GLU.h>
-#include <dwmapi.h>
-#include <TlHelp32.h>
-#pragma comment( lib, "OpenGL32.lib" )
-#pragma comment (lib, "glu32.lib")
-#pragma comment(lib, "Dwmapi.lib")
-
+#include "glDrawing.h"
 
 #define show_console 1 //1 = show console ~ 0 = don't show console
 
@@ -45,7 +36,8 @@ float SHeight;
 HANDLE TargetProcess;
 HINSTANCE CurrentInstance;
 DWORD DwClient;
-int SnapLineColor[3] = { 255, 0, 0 };
+int colorRed[3] = { 255, 0, 0 };
+int colorGrey[3] = { 72, 98, 140 };
 
 bool shutdown = false;
 
@@ -141,36 +133,6 @@ void SetupGL()
 	glClearColor(0.f, 0.f, 0.f, 0.f);
 }
 
-void clickMouseLeft() {
-
-	INPUT    Input = { 0 };
-	// left down 
-	Input.type = INPUT_MOUSE;
-	Input.mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
-	SendInput(1, &Input, sizeof(INPUT));
-	Sleep(25);
-	// left up
-	ZeroMemory(&Input, sizeof(INPUT));
-	Input.type = INPUT_MOUSE;
-	Input.mi.dwFlags = MOUSEEVENTF_LEFTUP;
-	SendInput(1, &Input, sizeof(INPUT));
-}
-
-void DrawSnaplines(float x, float y, int* RGB)
-{
-	glLineWidth(3);
-	glBegin(GL_LINES); //begin drawing snapline outline
-	glColor4f(0, 0, 0, 1); //black, yes alpha
-	glVertex2f(x, y); //enemies feet
-	glVertex2f(SWidth / 2, SHeight); //half screen width, bottom of screen
-	glEnd();
-	glLineWidth(1);
-	glBegin(GL_LINES); //begin drawing color snapline
-	glColor4f(RGB[0], RGB[1], RGB[2], 1); //color, yes alpha
-	glVertex2f(x, y); //enemies feet
-	glVertex2f(SWidth / 2, SHeight); //half screen width, bottom of screen
-	glEnd();
-}
 
 //window message handling
 LRESULT APIENTRY WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -209,7 +171,7 @@ LRESULT APIENTRY WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			if (isTeamGame(baseAddressMainMod)) {
 				if (entityList != nullptr
 					&& entityList->entities[i] != nullptr
-					&& entityList->entities[i]->getLife() > 0 && entityList->entities[i]->getLife() < 1000
+					&& isEntityValid(entityList->entities[i])
 					&& strcmp(localPlayer->getTeam(), entityList->entities[i]->getTeam()) != 0
 					&& strcmp(localPlayer->getName(), entityList->entities[i]->getName()) != 0) {
 
@@ -217,31 +179,40 @@ LRESULT APIENTRY WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 					if (WorldToScreen(entityList->entities[i]->getPosition(), screenCoords, viewMatrix, SWidth, SHeight))
 					{
-						//color of back of snaplines
-						
 						//draw snaplines to entity
-						DrawSnaplines(screenCoords.x, screenCoords.y, SnapLineColor);
+						gl::DrawSnaplines(screenCoords.x, screenCoords.y, SWidth, SHeight, colorRed);
 					}
 				}
 			}
 			else {
 				if (entityList != nullptr
 					&& entityList->entities[i] != nullptr
-					&& entityList->entities[i]->getLife() > 0 && entityList->entities[i]->getLife() < 1000
+					&& isEntityValid(entityList->entities[i])
 					&& strcmp(localPlayer->getName(), entityList->entities[i]->getName()) != 0) {
 
 					Vector2 screenCoords;
 
 					if (WorldToScreen(entityList->entities[i]->getPosition(), screenCoords, viewMatrix, SWidth, SHeight))
 					{
-						//color of back of snaplines
-						int SnapLineColor[3] = { 0, 255, 0 };
 						//draw snaplines to entity
-						DrawSnaplines(screenCoords.x, screenCoords.y, SnapLineColor);
+						gl::DrawSnaplines(screenCoords.x, screenCoords.y, SWidth, SHeight, colorRed);
 					}
 				}
 			}
 		}
+
+		// 11 
+
+		float distance = getClosestEnemyToCrosshairFOVDistance(localPlayer, entityList, isTeamGame(baseAddressMainMod), playerCount);
+
+		if (distance <= 13) {
+			gl::DrawCircle(SWidth / 2, SHeight / 2, 100, 20, colorRed);
+		}
+		else {
+			gl::DrawCircle(SWidth / 2, SHeight / 2, 100, 20, colorGrey);
+		}
+
+		
 
 		//copy the backbuffer into the window
 		SwapBuffers(MainHDC);
@@ -377,29 +348,22 @@ DWORD WINAPI MainThread(LPVOID param) {
 			angle.x = (atan2f(dst.x - src.x, dst.y - src.y) * -1.0) / PI * 180.0;
 			angle.y = asinf((dst.z - src.z) / src.Distance(dst)) * (180.0 / PI);
 
-			localPlayer->setViewAngleX(angle.x);
-			localPlayer->setViewAngleY(angle.y);
+			float distance = getClosestEnemyToCrosshairFOVDistance(localPlayer, entityList, isTeamGame(baseAddressMainMod), playerCount);
 
-			// short sleep to let the game time to snap on target
-			Sleep(10);
-			clickMouseLeft();
+			if (distance <= 13) {
+				localPlayer->setViewAngleX(angle.x);
+				localPlayer->setViewAngleY(angle.y);
+				// short sleep to let the game time to snap on target
+				Sleep(10);
+				clickMouseLeft();
+			}
+
+		
 		}
 
 		if (GetAsyncKeyState(VK_NUMPAD6) & 1) { //if Insert is pressed make a short beep and free the console (if used)
-
-			Entity* closestEntity = getClosestEnemyToCrosshair(localPlayer, entityList, isTeamGame(baseAddressMainMod), playerCount);
-
-			Vector3 src = localPlayer->getPosition();
-			Vector3 dst = closestEntity->getPosition();
-
-			Vector2 angle;
-			angle.x = (atan2f(dst.x - src.x, dst.y - src.y) * -1.0) / PI * 180.0;
-			angle.y = asinf((dst.z - src.z) / src.Distance(dst)) * (180.0 / PI);
-
-			localPlayer->setViewAngleX(angle.x);
-			localPlayer->setViewAngleY(angle.y);
+			shootIfEnemyCloseToCrosshair(localPlayer, entityList, isTeamGame(baseAddressMainMod), playerCount);
 		}
-
 
 		//IMPORTANT: if you close the console manually the game/programm you injected this into will crash/close down!
 		if (GetAsyncKeyState(VK_INSERT) & 1) { //if Insert is pressed make a short beep and free the console (if used)
