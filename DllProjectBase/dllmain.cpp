@@ -7,7 +7,7 @@
 #include "esp.h"
 #include "glDrawing.h"
 
-#define show_console 0 //1 = show console ~ 0 = don't show console
+#define show_console 1 //1 = show console ~ 0 = don't show console
 
 #define PI 3.14159265358979323846 
 
@@ -28,14 +28,11 @@ HWND EspHWND;
 LPCSTR WName = "Overlay 0.0.5";
 HDC MainHDC;
 HGLRC MainHGLRC;
-HPALETTE MainPalette;
 RECT WindowRect;
 RECT ClientRect;
 float SWidth;
 float SHeight;
-HANDLE TargetProcess;
 HINSTANCE CurrentInstance;
-DWORD DwClient;
 int colorRed[3] = { 255, 0, 0 };
 int colorGrey[3] = { 100, 100, 100 };
 
@@ -168,11 +165,9 @@ LRESULT APIENTRY WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 		if (isTeamGame(baseAddressMainMod)) {
 			for (int i = 1; i < playerCount + 1; i++) {
-				if (entityList != nullptr
-					&& entityList->entities[i] != nullptr
+				if (entityList->entities[i] != nullptr
 					&& isEntityValid(entityList->entities[i])
-					&& strcmp(localPlayer->getTeam(), entityList->entities[i]->getTeam()) != 0
-					&& strcmp(localPlayer->getName(), entityList->entities[i]->getName()) != 0) {
+					&& strcmp(localPlayer->getTeam(), entityList->entities[i]->getTeam()) != 0) {
 
 					Vector2 screenCoords;
 					Vector3 entityPos = entityList->entities[i]->getPosition();
@@ -209,8 +204,7 @@ LRESULT APIENTRY WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		for (int i = 1; i < playerCount + 1; i++) {
 			if (entityList != nullptr
 				&& entityList->entities[i] != nullptr
-				&& isEntityValid(entityList->entities[i])
-				&& strcmp(localPlayer->getName(), entityList->entities[i]->getName()) != 0) {
+				&& isEntityValid(entityList->entities[i])) {
 
 				Vector2 screenCoords;
 				Vector2 screenCoordsPlusHeight;
@@ -230,10 +224,6 @@ LRESULT APIENTRY WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				}
 			}
 		}
-		
-
-		// 11 
-
 		float distance = getClosestEnemyToCrosshairFOVDistance(localPlayer, entityList, isTeamGame(baseAddressMainMod), playerCount);
 
 		if (distance <= 13) {
@@ -242,8 +232,6 @@ LRESULT APIENTRY WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		else {
 			gl::DrawCircle(SWidth / 2, SHeight / 2, 100, 20, colorGrey);
 		}
-
-		
 
 		//copy the backbuffer into the window
 		SwapBuffers(MainHDC);
@@ -262,7 +250,6 @@ DWORD WINAPI RedrawLoop(LPVOID PARAMS)
 	{
 		ResizeWindow();
 		InvalidateRect(EspHWND, NULL, false);
-		Sleep(0);
 	}
 	ExitThread(0);
 }
@@ -366,7 +353,7 @@ DWORD WINAPI MainThread(LPVOID param) {
 			viewMatrix = (float*)(baseAddressMainMod + viewMatrixPointer);
 			playerCount = *(int*)(baseAddressMainMod + playerCountPointer);
 		}
-
+		
 		if (GetAsyncKeyState(VK_NUMPAD5) & 1) { //if Insert is pressed make a short beep and free the console (if used)
 
 			Entity* closestEntity = getClosestEnemyToCrosshair(localPlayer, entityList, isTeamGame(baseAddressMainMod), playerCount);
@@ -389,8 +376,6 @@ DWORD WINAPI MainThread(LPVOID param) {
 				Sleep(10);
 				clickMouseLeft();
 			}
-
-		
 		}
 
 		if (GetAsyncKeyState(VK_NUMPAD6) & 1) { //if Insert is pressed make a short beep and free the console (if used)

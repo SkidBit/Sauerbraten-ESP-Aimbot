@@ -38,25 +38,21 @@ Entity* getClosestEnemy(Entity* player, EntityList* entList, bool teamGame, int 
 	float tmpDistance = 0;
 
 	for (int i = 1; i < playerCount + 1; i++) {
-		if (entList->entities[i] != nullptr &&
-			entList->entities[i]->getLife() > 0) {
-
-			if (entList->entities[i]->getLife() > 0 && entList->entities[i]->getLife() < 1000) {
-				if (teamGame) {
-					if (strcmp(player->getTeam(), entList->entities[i]->getTeam()) != 0) {
-						tmpDistance = getDistanceBetweenEntities(player, entList->entities[i]);
-						if (tmpDistance < closestEntityDist) {
-							closestEntityDist = tmpDistance;
-							closestEntity = entList->entities[i];
-						}
-					}
-				}
-				else {
+		if (entList->entities[i] != nullptr && isEntityValid(entList->entities[i])) {
+			if (teamGame) {
+				if (strcmp(player->getTeam(), entList->entities[i]->getTeam()) != 0) {
 					tmpDistance = getDistanceBetweenEntities(player, entList->entities[i]);
 					if (tmpDistance < closestEntityDist) {
 						closestEntityDist = tmpDistance;
 						closestEntity = entList->entities[i];
 					}
+				}
+			}
+			else {
+				tmpDistance = getDistanceBetweenEntities(player, entList->entities[i]);
+				if (tmpDistance < closestEntityDist) {
+					closestEntityDist = tmpDistance;
+					closestEntity = entList->entities[i];
 				}
 			}
 		}
@@ -87,8 +83,7 @@ Entity* getClosestEnemyToCrosshair(Entity* player, EntityList* entList, bool tea
 	float currentYAngle = 0;
 
 	for (int i = 1; i < playerCount + 1; i++) {
-		if (entList->entities[i] != nullptr &&
-			entList->entities[i]->getLife() > 0) {
+		if (entList->entities[i] != nullptr) {
 
 			if (isEntityValid(entList->entities[i])) {
 
