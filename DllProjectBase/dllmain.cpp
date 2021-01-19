@@ -7,7 +7,7 @@
 #include "esp.h"
 #include "glDrawing.h"
 
-#define show_console 1 //1 = show console ~ 0 = don't show console
+#define show_console 0 //1 = show console ~ 0 = don't show console
 
 #define PI 3.14159265358979323846 
 
@@ -37,7 +37,7 @@ HANDLE TargetProcess;
 HINSTANCE CurrentInstance;
 DWORD DwClient;
 int colorRed[3] = { 255, 0, 0 };
-int colorGrey[3] = { 72, 98, 140 };
+int colorGrey[3] = { 100, 100, 100 };
 
 bool shutdown = false;
 
@@ -166,9 +166,8 @@ LRESULT APIENTRY WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		//redraw the background
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		for (int i = 1; i < playerCount + 1; i++) {
-
-			if (isTeamGame(baseAddressMainMod)) {
+		if (isTeamGame(baseAddressMainMod)) {
+			for (int i = 1; i < playerCount + 1; i++) {
 				if (entityList != nullptr
 					&& entityList->entities[i] != nullptr
 					&& isEntityValid(entityList->entities[i])
@@ -176,23 +175,28 @@ LRESULT APIENTRY WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					&& strcmp(localPlayer->getName(), entityList->entities[i]->getName()) != 0) {
 
 					Vector2 screenCoords;
+					Vector3 entityPos = entityList->entities[i]->getPosition();
+					entityPos.z -= 15;
 
-					if (WorldToScreen(entityList->entities[i]->getPosition(), screenCoords, viewMatrix, SWidth, SHeight))
+					if (WorldToScreen(entityPos, screenCoords, viewMatrix, SWidth, SHeight))
 					{
 						//draw snaplines to entity
 						gl::DrawSnaplines(screenCoords.x, screenCoords.y, SWidth, SHeight, colorRed);
 					}
 				}
 			}
-			else {
+		} else {
+			for (int i = 1; i < playerCount + 1; i++) {
 				if (entityList != nullptr
 					&& entityList->entities[i] != nullptr
 					&& isEntityValid(entityList->entities[i])
 					&& strcmp(localPlayer->getName(), entityList->entities[i]->getName()) != 0) {
 
 					Vector2 screenCoords;
+					Vector3 entityPos = entityList->entities[i]->getPosition();
+					entityPos.z -= 15;
 
-					if (WorldToScreen(entityList->entities[i]->getPosition(), screenCoords, viewMatrix, SWidth, SHeight))
+					if (WorldToScreen(entityPos, screenCoords, viewMatrix, SWidth, SHeight))
 					{
 						//draw snaplines to entity
 						gl::DrawSnaplines(screenCoords.x, screenCoords.y, SWidth, SHeight, colorRed);
@@ -200,6 +204,33 @@ LRESULT APIENTRY WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				}
 			}
 		}
+
+		// draw box
+		for (int i = 1; i < playerCount + 1; i++) {
+			if (entityList != nullptr
+				&& entityList->entities[i] != nullptr
+				&& isEntityValid(entityList->entities[i])
+				&& strcmp(localPlayer->getName(), entityList->entities[i]->getName()) != 0) {
+
+				Vector2 screenCoords;
+				Vector2 screenCoordsPlusHeight;
+				Vector3 playerPos = entityList->entities[i]->getPosition();
+				Vector3 playerPosPlusHeight = entityList->entities[i]->getPosition();
+				playerPosPlusHeight.z -= 15;
+
+				bool inFOV = WorldToScreen(playerPos, screenCoords, viewMatrix, SWidth, SHeight);
+				WorldToScreen(playerPosPlusHeight, screenCoordsPlusHeight, viewMatrix, SWidth, SHeight);
+
+				float height = screenCoords.y - screenCoordsPlusHeight.y;
+				float width = height * (45.f / 80.f);
+
+				if (inFOV)
+				{
+					gl::DrawBox(screenCoords.x, screenCoords.y, width, height, colorRed);
+				}
+			}
+		}
+		
 
 		// 11 
 
@@ -231,9 +262,9 @@ DWORD WINAPI RedrawLoop(LPVOID PARAMS)
 	{
 		ResizeWindow();
 		InvalidateRect(EspHWND, NULL, false);
-		Sleep(WRefreshRate);
+		Sleep(0);
 	}
-	return 0;
+	ExitThread(0);
 }
 
 DWORD WINAPI OverlayThread(LPVOID param) {
@@ -319,8 +350,7 @@ DWORD WINAPI OverlayThread(LPVOID param) {
 		TranslateMessage(&Msg);
 		DispatchMessage(&Msg);
 	}
-
-	return 0;
+	ExitThread(0);
 }
 
 DWORD WINAPI MainThread(LPVOID param) {
@@ -343,6 +373,8 @@ DWORD WINAPI MainThread(LPVOID param) {
 
 			Vector3 src = localPlayer->getPosition();
 			Vector3 dst = closestEntity->getPosition();
+			// correct aim down a bit
+			dst.z -= 2;
 
 			Vector2 angle;
 			angle.x = (atan2f(dst.x - src.x, dst.y - src.y) * -1.0) / PI * 180.0;
@@ -367,13 +399,12 @@ DWORD WINAPI MainThread(LPVOID param) {
 
 		//IMPORTANT: if you close the console manually the game/programm you injected this into will crash/close down!
 		if (GetAsyncKeyState(VK_INSERT) & 1) { //if Insert is pressed make a short beep and free the console (if used)
-
+			shutdown = true;
+			Sleep(1000);
 			if (show_console) {
-				shutdown = true;
 				auto temp = GetConsoleWindow();
 				FreeConsole();
 				PostMessage(temp, WM_QUIT, 0, 0);
-
 			}
 			break;
 		}

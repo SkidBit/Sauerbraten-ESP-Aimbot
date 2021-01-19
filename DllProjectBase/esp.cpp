@@ -73,7 +73,7 @@ float calculateDifferenceBetweenAngles(float firstAngle, float secondAngle)
 }
 
 bool isEntityValid(Entity* entity) {
-	return entity->getLife() > 0 && entity->getLife() < 1000;
+	return entity->getLife() > 0 && entity->getLife() < 1000 && entity->getIsDead() == false;
 }
 
 Entity* getClosestEnemyToCrosshair(Entity* player, EntityList* entList, bool teamGame, int playerCount)
