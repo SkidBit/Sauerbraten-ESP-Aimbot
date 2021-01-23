@@ -81,3 +81,13 @@ const uintptr_t localPlayerPointer = 0x2A5730;
 const uintptr_t viewMatrixPointer = 0x32D040;
 const uintptr_t gameModePointer = 0x26f6c0;
 const uintptr_t playerCountPointer = 0x346C9C;
+
+// globals
+extern Entity* localPlayer;
+extern EntityList* entityList;
+extern float* viewMatrix;
+extern int playerCount;
+extern uintptr_t baseAddressMainMod;
+
+extern bool shutdown;
+

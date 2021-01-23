@@ -24,6 +24,9 @@
     <Filter Include="glDrawing">
       <UniqueIdentifier>{cb5731e3-2e2d-42ab-bd7c-1fe0c88a1a56}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Overlay">
+      <UniqueIdentifier>{0acf37e3-57a4-4839-b546-aca3cecf3aaf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mem.h">
@@ -53,6 +56,9 @@
     <ClInclude Include="glDrawing.h">
       <Filter>glDrawing</Filter>
     </ClInclude>
+    <ClInclude Include="overlay.h">
+      <Filter>Overlay</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -69,6 +75,9 @@
     </ClCompile>
     <ClCompile Include="glDrawing.cpp">
       <Filter>glDrawing</Filter>
+    </ClCompile>
+    <ClCompile Include="overlay.cpp">
+      <Filter>Overlay</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
