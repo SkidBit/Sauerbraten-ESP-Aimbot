@@ -142,7 +142,6 @@ void shootIfEnemyCloseToCrosshair(Entity* player, EntityList* entList, bool team
 {
 	// make variable depending on distance
 	if (getClosestEnemyToCrosshairFOVDistance(player, entList, teamGame, playerCount) < 2.f) {
-		Sleep(10);
 		clickMouseLeft();
 	}
 }
