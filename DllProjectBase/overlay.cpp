@@ -182,10 +182,22 @@ LRESULT APIENTRY overlay::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
 
 				if (inFOV)
 				{
-					gl::DrawBox(screenCoords.x, screenCoords.y, width, height, colorRed);
+					if (isTeamGame(baseAddressMainMod)) {
+						if(strcmp(localPlayer->getTeam(), entityList->entities[i]->getTeam()) == 0){
+							gl::DrawBox(screenCoords.x, screenCoords.y, width, height, colorGreen);
+						}
+						else {
+							gl::DrawBox(screenCoords.x, screenCoords.y, width, height, colorRed);
+						}
+					}
+					else {
+						gl::DrawBox(screenCoords.x, screenCoords.y, width, height, colorRed);
+					}
+					
 				}
 			}
 		}
+
 		float distance = getClosestEnemyToCrosshairFOVDistance(localPlayer, entityList, isTeamGame(baseAddressMainMod), playerCount);
 
 		if (distance <= 13) {

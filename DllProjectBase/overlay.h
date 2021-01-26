@@ -14,6 +14,7 @@ inline float SWidth;
 inline float SHeight;
 inline HINSTANCE CurrentInstance;
 inline int colorRed[3] = { 255, 0, 0 };
+inline int colorGreen[3] = { 0, 255, 0 };
 inline int colorGrey[3] = { 100, 100, 100 };
 
 namespace overlay {
