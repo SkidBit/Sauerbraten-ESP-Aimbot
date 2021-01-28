@@ -27,9 +27,6 @@
     <Filter Include="Overlay">
       <UniqueIdentifier>{0acf37e3-57a4-4839-b546-aca3cecf3aaf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="glText">
-      <UniqueIdentifier>{18e3d983-a662-403c-be6a-8cfb2d3e3a6b}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mem.h">
@@ -59,9 +56,6 @@
     <ClInclude Include="overlay.h">
       <Filter>Overlay</Filter>
     </ClInclude>
-    <ClInclude Include="glText.h">
-      <Filter>glText</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -81,9 +75,6 @@
     </ClCompile>
     <ClCompile Include="overlay.cpp">
       <Filter>Overlay</Filter>
-    </ClCompile>
-    <ClCompile Include="glText.cpp">
-      <Filter>glText</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

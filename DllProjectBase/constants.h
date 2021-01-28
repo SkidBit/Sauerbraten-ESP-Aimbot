@@ -90,4 +90,3 @@ extern int playerCount;
 extern uintptr_t baseAddressMainMod;
 
 extern bool shutdown;
-

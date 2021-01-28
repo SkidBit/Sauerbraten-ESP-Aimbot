@@ -156,7 +156,6 @@
     <ClInclude Include="constants.h" />
     <ClInclude Include="esp.h" />
     <ClInclude Include="glDrawing.h" />
-    <ClInclude Include="glText.h" />
     <ClInclude Include="hook.h" />
     <ClInclude Include="includes.h" />
     <ClInclude Include="mem.h" />
@@ -167,7 +166,6 @@
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="esp.cpp" />
     <ClCompile Include="glDrawing.cpp" />
-    <ClCompile Include="glText.cpp" />
     <ClCompile Include="hook.cpp" />
     <ClCompile Include="mem.cpp" />
     <ClCompile Include="overlay.cpp" />
